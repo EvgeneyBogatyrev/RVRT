@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--sigma', type=int, default=0, help='noise level for denoising: 10, 20, 30, 40, 50')
     parser.add_argument('--folder_lq', type=str, default='testsets/REDS4/sharp_bicubic',
                         help='input low-quality test video folder')
+    parser.add_argument('--results', type=str, default=None)
     parser.add_argument('--folder_gt', type=str, default=None,
                         help='input ground-truth test video folder')
     parser.add_argument('--tile', type=int, nargs='+', default=[100,128,128],
@@ -54,7 +55,7 @@ def main():
 
     test_loader = DataLoader(dataset=test_set, num_workers=args.num_workers, batch_size=1, shuffle=False)
 
-    save_dir = f'results/{args.task}'
+    save_dir = args.results#f'results/{args.task}'
     if args.save_result:
         os.makedirs(save_dir, exist_ok=True)
     test_results = OrderedDict()
@@ -68,7 +69,7 @@ def main():
     for idx, batch in enumerate(test_loader):
         lq = batch['L'].to(device)
         folder = batch['folder']
-        gt = batch['H'] if 'H' in batch else None
+        gt = None#batch['H'] if 'H' in batch else None
 
         # inference
         with torch.no_grad():
